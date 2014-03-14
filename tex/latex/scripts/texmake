@@ -7,7 +7,8 @@ def usage():
 
 def main(args):
     filename = "INSERT_TEX_FILENAME" if (args == []) else args[0]
-    print """TEXFILE = {}
+    print """
+TEXFILE = {}
 
 TEXFILE = example
 
@@ -19,7 +20,9 @@ clean:
 \tknuth clean
 
 view: $(TEXFILE).pdf
-\tevince $<
+\tif command -v evince; then evince $<; \\
+\telif command -v open; then open $<; \\
+\telse echo "ERROR: unable to open pdf. Try installing evince"; fi
 """.format(filename)
 
 if __name__ == "__main__":
