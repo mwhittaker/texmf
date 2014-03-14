@@ -3,7 +3,7 @@
 import sys
 
 LATEX            = "pdflatex"
-OUTPUT_DIRECTORY = "bin"
+OUTPUT_DIRECTORY = "knuth-out"
 LATEX_OPTIONS    = "-synctex=1 -interaction=nonstopmode"
 PYTHONTEX        = "pythontex"
 
@@ -23,8 +23,8 @@ def latex(texfile):
     
     newfiles = !ls
     for f in newfiles:
-        if f not in files and f != "bin":
-            !mv {f} bin/{f}
+        if f not in files and f != OUTPUT_DIRECTORY:
+            !mv {f} {OUTPUT_DIRECTORY}/{f}
 
 def main(args):
     if (args == []):
@@ -46,7 +46,7 @@ def main(args):
         for texfile in texfiles:
             latex(texfile)
 
-        !mv bin/*.pdf .
+        !mv {OUTPUT_DIRECTORY}/*.pdf .
 
 if __name__ == "__main__":
     main(sys.argv[1:])
