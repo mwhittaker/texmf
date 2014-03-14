@@ -1,0 +1,67 @@
+\ProvidesPackage{c}
+
+\input{requires.tex}
+\input{colors.tex}
+\input{lengths.tex}
+\input{captions.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Captions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareCaptionFormat{clisting}{\colorbox[HTML]{000000}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{#1#2#3}}}
+\captionsetup[C]{format=clisting,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,small}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% c Language Definition
+\lstdefinelanguage{CC}{%
+  % Basic settings
+  basicstyle=\smaller\ttfamily,
+  tabsize=4,
+  showstringspaces=false,
+  mathescape=true,
+  breaklines=true,
+  numbers=left,
+  % Keywords, strings, and comments
+  keywords={%
+    auto, break, case, char, const, continue, default, do, double, else, enum,
+    extern, float, for, goto, if, int, long, register, return, short, signed,
+    sizeof, static, struct, switch, typedef, union, unsigned, void, volatile,
+    while
+  },
+  keywords=[2]{%
+  },
+  morestring=[b]",
+  morestring=[b]',
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morecomment=[l][\color{gray}]{\#},
+  % Colors and style
+  %backgroundcolor=\color{BackgroundYellow},
+  keywordstyle=\color{blue},
+  keywordstyle=[2]\color{DarkOrchid},
+  commentstyle=\color{ForestGreen},
+  stringstyle=\color{Red},
+  numberstyle=\color{SolarizedGrey}
+}
+
+% environment
+\lstnewenvironment{C}[1][]{%
+  \lstset{%
+    language=CC,
+    linewidth=80\charwidth,
+    #1
+  }
+  \captionsetup{options=C}
+}{}
+
+% inline definition.
+\renewcommand*{\c}{\lstinline[{language=C}]}
+
+% input listing definition
+\newcommand{\inputc}[2][ ]{{%
+  \captionsetup{options=C}
+  \lstset{linewidth=80\charwidth}
+  \lstinputlisting[language=CC,#1]{{#2}} 
+}}

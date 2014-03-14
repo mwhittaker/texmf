@@ -1,0 +1,51 @@
+ttquot feb09
+
+% ttquot.sty
+%
+% This style is intended to make it easier to write text on technical
+% subjects, so that the text is readable even when it is TeX source.
+%
+% One of the most common problems is switching conveniently into the
+% typewriter font and back. This style file makes the ordinary double
+% quotation mark (") serve this function. Note that the meaning of \tt
+% may be different in math and text mode, for example if the "times"
+% package is being used.
+%
+% This package also makes underscore characters (_) switch into
+% emphasized mode and back, unless inside " quotes or in math mode. This
+% makes ordinary variable names easier to type in typewriter font, and
+% makes emphasized mode obey a common ASCII text convention.
+%
+% Options:
+%   sfcode
+%       Makes text inside quotation marks come out in \sf font.
+%   small
+%       Makes text inside quotation marks come out \small (except in math
+%       mode.) This is especially useful when using the times package, because
+%       the Courier and Helvetica fonts are larger than Times.
+%   stdbraces
+%       By default, the commands \{ and \} emit ordinary characters 123 and
+%       125 inside quotation marks. This works well if you are in \tt font,
+%       but not so well in a font (e.g., \sf) lacking these characters. Use
+%       stdbraces to defeat it.
+%   bfemph
+%       Make underscore turn on boldface instead of italics.
+%
+% The following macros are defined and may be used or overridden.
+%
+% \ttquot@activate       Turn on ttquot processing. On by default.
+% \ttquot@deactivate     Turn off ttquot processing.
+% \ttquot@ttmode         The 'code' environment introduced by "
+% \ttquot@emmode         The 'emphasized' environment introduced by _
+% \ttquot@setup          Commands that are emitted in the " environment.
+% \ttquot@ttfont         The font part of tt@setup, By default, \tt.
+% \ttquot@ttsize         The font size part of tt@setup, By default, nothing.
+% \ttquot@emfont         The commands that are emitted in the _ environment.
+%                        By default, \em
+% \ttquot@braces         Another command emitted in the " environment.
+%                        By default, changes braces to use tt font chars.
+%                        The "stdbraces" option defeats this.
+% \ttquot@mark           Always represents the plain character (")
+% \ttquot@us             Represents the original meaning of (_)
+%
+% This style file was created by and is maintained by Andrew Myers (andru@cs.cornell.edu)

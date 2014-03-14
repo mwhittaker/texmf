@@ -1,0 +1,53 @@
+#! /usr/local/bin/ipython
+
+import sys
+
+LATEX            = "pdflatex"
+OUTPUT_DIRECTORY = "bin"
+LATEX_OPTIONS    = "-synctex=1 -interaction=nonstopmode"
+PYTHONTEX        = "pythontex"
+
+COMMANDS = {"build", "clean"}
+
+def usage():
+    print "knuth (build texfile... | clean)"
+
+def latex(texfile):
+    files = !ls
+    
+    !mkdir -p "{OUTPUT_DIRECTORY}"
+    !{LATEX} {LATEX_OPTIONS} "{texfile}" 
+    !{PYTHONTEX} "{texfile}" 
+    !{LATEX} {LATEX_OPTIONS} "{texfile}" 
+    !{LATEX} {LATEX_OPTIONS} "{texfile}" 
+    
+    newfiles = !ls
+    for f in newfiles:
+        if f not in files and f != "bin":
+            !mv {f} bin/{f}
+
+def main(args):
+    if (args == []):
+        usage()
+        return
+
+    command = args[0]
+    texfiles = args[1:]
+
+    if command not in COMMANDS:
+        usage()
+        return
+
+    if command == "clean":
+        !rm -r {OUTPUT_DIRECTORY}
+        !rm *.pdf
+        return
+    else: # command == "build"
+        for texfile in texfiles:
+            latex(texfile)
+
+        !mv bin/*.pdf .
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
+
