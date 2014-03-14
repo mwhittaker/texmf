@@ -1,4 +1,4 @@
-#! /usr/local/bin/ipython
+#! /usr/bin/python /usr/local/bin/ipython
 
 import sys
 
