@@ -1,3 +1,4 @@
+
 TEXFILE = example
 
 TEXFILE = example
@@ -10,5 +11,7 @@ clean:
 	knuth clean
 
 view: $(TEXFILE).pdf
-	evince $<
+	if command -v evince; then evince $<; \
+	elif command -v open; then open $<; \
+	else echo "ERROR: unable to open pdf. Try installing evince"; fi
 
