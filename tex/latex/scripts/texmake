@@ -10,8 +10,6 @@ def main(args):
     print """
 TEXFILE = {}
 
-TEXFILE = example
-
 $(TEXFILE).pdf: $(TEXFILE).tex
 \tknuth build $<
 
