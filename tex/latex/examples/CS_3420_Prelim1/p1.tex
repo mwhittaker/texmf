@@ -65,7 +65,7 @@ Memory: a linear array of `registers'. Instructions are also stored in memory
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.7]{absComp}
+  \includegraphics[scale=.7]{img/absComp}
   \caption{An Abstract Computer}
 \end{figure}
 
@@ -96,7 +96,7 @@ for (i=0; i<10; i++){
 The location of operands in specified by the \emph{addressing mode}. The MSP 430
 supports the following different addressing modes:
 \begin{figure}[H]
-  \includegraphics[scale=.5]{address}
+  \includegraphics[scale=.5]{img/address}
 \end{figure}
 
 \subsubsection{Endianness}
@@ -112,13 +112,13 @@ For example, if we wanted to store the value xFEED into a memory array, we could
 use the following:
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{endian}
+  \includegraphics[scale=.4]{img/endian}
   \caption{Big Endian vs Little Endian}
 \end{figure}
 
 \section{Most Commonly Used Instructions}
 \begin{figure}[H]
-  \includegraphics[scale=.6]{instructions}
+  \includegraphics[scale=.6]{img/instructions}
 \end{figure}
 
 
@@ -134,7 +134,7 @@ for function calls and especially for recursion. In the MSP 430, it looks someth
 like this:
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{stack}
+  \includegraphics[scale=.4]{img/stack}
 \end{figure}
 To push to the stack we use the following command:
 \begin{C}
@@ -240,7 +240,7 @@ Daisy Chaining is a wiring scheme in which multiple devices are wired together
 in sequence. 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.8]{dchain}
+  \includegraphics[scale=.8]{img/dchain}
 \end{figure}
 
 The closest connection has the highest priority. The problem is if there is any
@@ -280,7 +280,7 @@ There are two types or resources involved here:
 \subsection{Turn Approach}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{turn}
+  \includegraphics[scale=.4]{img/turn}
 \end{figure}
 
 \begin{itemize}
@@ -294,7 +294,7 @@ There are two types or resources involved here:
 \subsection{Dekker's Algorithm V1}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{dekker1}
+  \includegraphics[scale=.4]{img/dekker1}
 \end{figure}
 
 \begin{itemize}
@@ -306,7 +306,7 @@ There are two types or resources involved here:
 \subsection{Dekker's Algorithm V2}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{dekker2}
+  \includegraphics[scale=.4]{img/dekker2}
 \end{figure}
                                                                         
 \begin{itemize}
@@ -320,7 +320,7 @@ There are two types or resources involved here:
 \subsection{Dekker's Algorithm Final}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{dekker3}
+  \includegraphics[scale=.4]{img/dekker3}
 \end{figure}
                                                                         
 \begin{itemize}
@@ -353,7 +353,7 @@ typedef struct process_state process_t;
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{queue}
+  \includegraphics[scale=.4]{img/queue}
 \end{figure}
 
 \subsection{Context Switching}
@@ -384,7 +384,7 @@ different ways.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{lock}
+  \includegraphics[scale=.4]{img/lock}
 \end{figure}
 
 \subsection{Test and Set}
@@ -430,7 +430,7 @@ approach uses two shared variables:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.6]{readwrite}
+  \includegraphics[scale=.6]{img/readwrite}
 \end{figure}
 
 Note: the locks in this case helps to implement a higher level construct of readers
@@ -479,14 +479,14 @@ We can use Condition Variables to implement the read and write functions which
 eliminates spin locks.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.5]{condition}
+  \includegraphics[scale=.5]{img/condition}
 \end{figure}
 However, when we don't to serialize readers, especially when there are no writers
 present. To let ready readers execute, we can change \emph{enter\_r} so that there
 are cascaded readers:
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.4]{cascade}
+  \includegraphics[scale=.4]{img/cascade}
 \end{figure}
 
 \subsection{Semaphores}
@@ -500,7 +500,7 @@ where we have processes that constantly try to write to a buffer and processes
 that constantly read from it.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=.45]{pcp}
+  \includegraphics[scale=.45]{img/pcp}
 \end{figure}
 
 A very simple implementation of the following is shown below and we can see that 
