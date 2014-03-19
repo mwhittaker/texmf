@@ -1,2 +1,4 @@
-\newlength{\charwidth}
-\setlength{\charwidth}{\widthof{\smaller\ttfamily a}}
+\ifundef{\charwidth}{
+    \newlength{\charwidth}
+    \setlength{\charwidth}{\widthof{\smaller\ttfamily a}}
+}{}
