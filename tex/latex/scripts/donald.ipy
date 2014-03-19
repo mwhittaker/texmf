@@ -16,10 +16,10 @@ def latex(texfile):
     files = !ls
     
     !mkdir -p "{OUTPUT_DIRECTORY}"
-    !{LATEX} {LATEX_OPTIONS} "{texfile}" 
-    !{PYTHONTEX} "{texfile}" 
-    !{LATEX} {LATEX_OPTIONS} "{texfile}" 
-    !{LATEX} {LATEX_OPTIONS} "{texfile}" 
+    !{LATEX} {LATEX_OPTIONS} "{texfile}" && \
+     {PYTHONTEX} "{texfile}" && \
+     {LATEX} {LATEX_OPTIONS} "{texfile}" && \
+     {LATEX} {LATEX_OPTIONS} "{texfile}" 
     
     newfiles = !ls
     for f in newfiles:
