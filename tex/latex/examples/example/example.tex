@@ -9,10 +9,8 @@
 \maketitle
 
 \section{Math}
-The answer is \cbox{x^2 = 2} and $\cbox{x^4 = 1}$. Or, in unsimplified form,
 \[\cbox{
-  \sum_\phi^\lambda \int\int\int_S^\infty \frac{\Gamma(\sqrt{x})}{\Omega}^r
-    \setst{s}{s > \infty} d\Phi
+  \text{Vol}(d) = r^d \frac{2 \pi^{\frac{d}{2}}}{d \Gamma\group{\frac{d}{2}}}
 }\]
 
 
@@ -39,7 +37,6 @@ def solve(eq,var='x'):
 shared_ptr<widget> get_widget(int id) {
     static map<int, weak_ptr<widget>> cache;
     static mutex m;
-
     lock_guard<mutex> hold(m);
     auto sp = cache[id].lock();
     if (!sp) cache[id] = sp = load_widget(id);
@@ -51,15 +48,14 @@ shared_ptr<widget> get_widget(int id) {
   label=list:fast-inv-sqrt, 
   caption=Fast inverse squareroot 
 ]
-float Q_rsqrt( float number )
-{
+float Q_rsqrt( float number ) {
     long i; 
     float x2, y;
     const float threehalfs = 1.5F;
     x2 = number * 0.5F;
     y  = number;
     i  = * ( long * ) &y;                       // evil floating point bit level hacking
-    i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
+    i  = 0x5f3759df - ( i >> 1 );               // what the?
     y  = * ( float * ) &i;
     y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
 //  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
