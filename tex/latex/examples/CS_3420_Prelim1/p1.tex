@@ -5,7 +5,6 @@
 \author{Ambar Soni}                 % defaults to Michael Whittaker
 \date{\today}                     % defaults to \today 
 
-\usepackage{lipsum}
 \begin{document}
 \maketitle
 \tableofcontents
@@ -142,9 +141,13 @@ To push to the stack we use the following command:
   @SP $\leftarrow$ src
 \end{C}
 
+\subsection{Stack Frame}
+This is not the same as a stack! A stack frame is the part of the stack that contains
+the infromation revelvant to that call of the function. This usually involves the
+function call's parameters, return address, and local variables.
 
 \subsection{Order of Operations}
-To properly implement a function call the following must occur:
+To properly implement a function call the following convention is obeyed:
 \begin{enumerate}
   \item User pushes the caller saved registers onto the stack (R11-R15)
   \item User pushes any parameters onto the stack
@@ -230,21 +233,21 @@ tag means that you can pin point exactly which instruction caused the exception
 or trap.
 
 \subsection{Service Routines (TRAPS)}
-Service routines are responsible for reading and writing to the DISC\@. They 
+Service routines are responsible for reading and writing to the DISC\@.  They 
 encapsulate simple tasks for the user and invoke changes of privilege. For example,
 when you boot up, you are in Super User mode so that you can define where SVC are
-even located and then you change back to user mode.
+even located and then you change back to user mode. It is a particular instruction.
 
 \subsection{Daisy Chaining}
 Daisy Chaining is a wiring scheme in which multiple devices are wired together 
-in sequence. 
+in sequence and they share the \emph{same} port.
 \begin{figure}[H]
   \centering
   \includegraphics[scale=.8]{img/dchain}
 \end{figure}
 
 The closest connection has the highest priority. The problem is if there is any
-electrical disconnect, all priorities will be lost.
+electrical disconnect, all priorities will be lost. 
 
 \subsection{Interrupt Vector}
 \begin{itemize}
@@ -366,10 +369,12 @@ process of saving and restoring process state is called a context switch.
 The procedure for switching processes using the Round Robin method:
 
 \begin{enumerate}
-  \item Push the PC, SR, and Registers of current process
+  \item Timer triggers interrupt
+  \item Push the PC, SR, and \emph{all} registers of current process
   \item Update the SP of the current process 
   \item Grab the first process on the ready queue and make it the current process
-  \item Restore the Registers, and use \emph{reti} to restore SR and PC
+  \item Restore the Registers in reverse order, and use \emph{reti} to restore
+    SR and PC
 \end{enumerate}
 
 
@@ -387,6 +392,9 @@ different ways.
   \includegraphics[scale=.4]{img/lock}
 \end{figure}
 
+Strictly speaking, simple locks are not fair because there is no guarantee that
+any one of the processes competing will ever win the lock in a finite time. 
+
 \subsection{Test and Set}
 Test and set instruction is an instruction used to write to a memory location 
 and return its old value as a single atomic operation. It sets the Z flag 
@@ -395,6 +403,10 @@ implement the lock() function seen above:
 \begin{C}
 Lock:   t&s &l
         jz Lock
+        ret
+
+Unlock: mov.w #1, l
+        ret
 \end{C} 
 The advantage of this implementation is that it maintains an atomic instruction 
 for RMW. It is very efficient and has low overhead. However, it is still a 
@@ -586,7 +598,7 @@ sleep. When an interrupt occurs, the SR is pushed into the stack and a cleared S
 is given to the ISR to work with. When we return from the ISR, we don't want to
 restore the SR because that would mean we go back to low power mode. Instead, the
 ISR uses a hack where it goes to the stack and modifies the SR before \emph{reti}
-is executed. 
+is executed.  
 
 
 \section{Extras}
@@ -643,6 +655,4 @@ P1_gate: turn = 0;
 
 
 \end{document}
-
-%SEE BAKER'S ALORITHM
 
