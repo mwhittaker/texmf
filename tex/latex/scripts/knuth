@@ -1,1 +1,123 @@
-donald.ipy "$@"
+#! /usr/bin/python
+
+import sys
+import argparse
+import subprocess
+import os
+import glob
+
+LATEX            = "pdflatex"
+OUTPUT_DIRECTORY = "knuth-out"
+LATEX_OPTIONS    = ["-synctex=1", "-interaction=nonstopmode"]
+PYTHONTEX        = "pythontex"
+
+def getlines(s):
+    return s.strip().split("\n")
+
+def ls(args=None):
+    if (args is None):
+        args = []
+
+    try:
+        return getlines(subprocess.check_output(["ls"] + args))
+    except subprocess.CalledProcessError:
+        return []
+
+def rm_glob(g):
+    files = glob.glob(g)
+    if (files != []):
+        subprocess.call(["rm"] + files)
+
+def rmr_glob(g):
+    directories = glob.glob(g)
+    if (directories != []):
+        subprocess.call(["rm", "-r"] + directories)
+
+def build(args):
+    old_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
+    
+    err = subprocess.call(["mkdir", "-p", OUTPUT_DIRECTORY])
+    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
+    if (err == 0): err = subprocess.call([PYTHONTEX] + args.files)
+    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
+    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
+
+    new_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
+    tmp_files = new_files - old_files
+    for tmp_file in tmp_files:
+        subprocess.call(["mv", "-f", tmp_file, OUTPUT_DIRECTORY])
+
+def clean(args):
+    if (os.path.exists(OUTPUT_DIRECTORY)):
+        subprocess.call(["rm", "-r", OUTPUT_DIRECTORY])
+
+    if (args.keep_pdf == False):
+        rm_glob("*.pdf")
+
+def sanitize(args):
+    garbage_files = ["*.aux", "*.log", "*.out", "*.gz", "*.pytxcode"]
+    if (args.keep_pdf == False):
+        garbage_files += ["*.pdf"]
+
+    garbage_directories = [OUTPUT_DIRECTORY, "pythontex-files-*"]
+    
+    map(rm_glob,  garbage_files)
+    map(rmr_glob, garbage_directories)
+
+def init_parser_build(subparsers):
+    parser = subparsers.add_parser("build")
+    parser.set_defaults(func=build)
+    
+    parser.add_argument(\
+        'files',
+        nargs = "+",
+        help  = "latex files"
+    )
+    
+    parser.add_argument(\
+        "-v", "--verbosity", 
+        action  = "count", 
+        default = 0,
+        help    = "increase output verbosity"
+    )
+
+def init_parser_clean(subparsers):
+    parser = subparsers.add_parser("clean")
+    parser.set_defaults(func=clean)
+
+    parser.add_argument(\
+        "--keep-pdf",
+        action="store_true",
+        help="do not remove pdf's"
+    )
+
+def init_parser_sanitize(subparsers):
+    parser = subparsers.add_parser("sanitize")
+    parser.set_defaults(func=sanitize)
+
+    parser.add_argument(\
+        "--keep-pdf",
+        action="store_true",
+        help="do not remove pdf's"
+    )
+
+def init_parser():
+    parser = argparse.ArgumentParser(\
+        prog="knuth", 
+        description="A latex compiler orchestrator"
+    )
+
+    subparsers = parser.add_subparsers()
+    init_parser_build(subparsers)
+    init_parser_clean(subparsers)
+    init_parser_sanitize(subparsers)
+
+    return parser
+
+def main():
+    parser = init_parser()
+    args = parser.parse_args()
+    args.func(args)
+
+if __name__ == "__main__":
+    main()

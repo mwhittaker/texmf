@@ -1,14 +1,16 @@
 
 TEXFILE = example
 
-TEXFILE = example
-
 $(TEXFILE).pdf: $(TEXFILE).tex
 	knuth build $<
 
 .PHONY: clean
 clean:
 	knuth clean
+
+.PHONY: tidy
+tidy:
+	knuth clean --keep-pdf
 
 view: $(TEXFILE).pdf
 	if command -v evince; then evince $<; \
