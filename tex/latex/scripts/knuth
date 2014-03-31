@@ -23,6 +23,16 @@ def ls(args=None):
     except subprocess.CalledProcessError:
         return []
 
+def rm_glob(g):
+    files = glob.glob(g)
+    if (files != []):
+        subprocess.call(["rm"] + files)
+
+def rmr_glob(g):
+    directories = glob.glob(g)
+    if (directories != []):
+        subprocess.call(["rm", "-r"] + directories)
+
 def build(args):
     old_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
     
@@ -42,9 +52,17 @@ def clean(args):
         subprocess.call(["rm", "-r", OUTPUT_DIRECTORY])
 
     if (args.keep_pdf == False):
-        pdfs = glob.glob("*.pdf")
-        if (pdfs != []):
-            subprocess.call(["rm"] + pdfs)
+        rm_glob("*.pdf")
+
+def sanitize(args):
+    garbage_files = ["*.aux", "*.log", "*.out", "*.gz", "*.pytxcode"]
+    if (args.keep_pdf == False):
+        garbage_files += ["*.pdf"]
+
+    garbage_directories = [OUTPUT_DIRECTORY, "pythontex-files-*"]
+    
+    map(rm_glob,  garbage_files)
+    map(rmr_glob, garbage_directories)
 
 def init_parser_build(subparsers):
     parser = subparsers.add_parser("build")
@@ -73,6 +91,16 @@ def init_parser_clean(subparsers):
         help="do not remove pdf's"
     )
 
+def init_parser_sanitize(subparsers):
+    parser = subparsers.add_parser("sanitize")
+    parser.set_defaults(func=sanitize)
+
+    parser.add_argument(\
+        "--keep-pdf",
+        action="store_true",
+        help="do not remove pdf's"
+    )
+
 def init_parser():
     parser = argparse.ArgumentParser(\
         prog="knuth", 
@@ -82,6 +110,7 @@ def init_parser():
     subparsers = parser.add_subparsers()
     init_parser_build(subparsers)
     init_parser_clean(subparsers)
+    init_parser_sanitize(subparsers)
 
     return parser
 
