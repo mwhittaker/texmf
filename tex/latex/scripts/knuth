@@ -8,7 +8,7 @@ import glob
 
 LATEX            = "pdflatex"
 OUTPUT_DIRECTORY = "knuth-out"
-LATEX_OPTIONS    = "-synctex=1 -interaction=nonstopmode"
+LATEX_OPTIONS    = ["-synctex=1", "-interaction=nonstopmode"]
 PYTHONTEX        = "pythontex"
 
 def getlines(s):
@@ -27,10 +27,10 @@ def build(args):
     old_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
     
     err = subprocess.call(["mkdir", "-p", OUTPUT_DIRECTORY])
-    if (err == 0): err = subprocess.call([LATEX, LATEX_OPTIONS] + args.files)
+    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
     if (err == 0): err = subprocess.call([PYTHONTEX] + args.files)
-    if (err == 0): err = subprocess.call([LATEX, LATEX_OPTIONS] + args.files)
-    if (err == 0): err = subprocess.call([LATEX, LATEX_OPTIONS] + args.files)
+    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
+    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
 
     new_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
     tmp_files = new_files - old_files
