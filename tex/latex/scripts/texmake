@@ -17,6 +17,10 @@ $(TEXFILE).pdf: $(TEXFILE).tex
 clean:
 \tknuth clean
 
+.PHONY: tidy
+tidy:
+\tknuth clean --keep-pdf
+
 view: $(TEXFILE).pdf
 \tif command -v evince; then evince $<; \\
 \telif command -v open; then open $<; \\
