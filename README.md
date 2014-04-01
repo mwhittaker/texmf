@@ -36,7 +36,8 @@ Now, we can run `make` to make foo.tex and `make clean` to clean up knuth's
 output files.
 
 ## Example ##
-![example.pdf](example/example.png)
+![example.pdf](example/example-0.png)
+![example.pdf](example/example-1.png)
 
 ## Installation ##
 Please read `install.sh`
