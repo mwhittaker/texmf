@@ -38,7 +38,7 @@ Now, we can run `make` to make foo.tex and `make clean` to clean up knuth's
 output files.
 
 ## Example ##
-![example.pdf](example.png)
+![example.pdf](example/example.png)
 
 ## Dependencies ##
 - ipython
