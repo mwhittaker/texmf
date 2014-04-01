@@ -5,6 +5,6 @@
 #
 #     ./install.sh >> ~/.bashrc
 
-echo 'export TEXMFHOME="$(pwd):$TEXMFHOME"'
-echo 'export PATH="$(pwd)/scripts:$PATH"'
-echo 'export PYTHONPATH="$(pwd)/python:$PYTHONPATH"'
+echo "export TEXMFHOME=\"$(pwd):$TEXMFHOME\""
+echo "export PATH=\"$(pwd)/scripts:$PATH\""
+echo "export PYTHONPATH=\"$(pwd)/python:$PYTHONPATH\""
