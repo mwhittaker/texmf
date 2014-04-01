@@ -1,4 +1,0 @@
-#! /bin/sh
-
-python /home/michael/CS/git/michael/texmf/pythontex/pythontex/pythontex.py "$@"
-
