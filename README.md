@@ -14,8 +14,6 @@ dedicated to making LaTeX compilation a more enjoyable experience.
     - C++
     - C
 
-
-
 ## knuth and texmake ##
 knuth is wrapper for a conjunction of pdflatex and pythontex. To compile a
 latex document, say foo.tex, run
@@ -40,6 +38,5 @@ output files.
 ## Example ##
 ![example.pdf](example/example.png)
 
-## Dependencies ##
-- ipython
-- pythontex
+## Installation ##
+Please read `install.sh`
