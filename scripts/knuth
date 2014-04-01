@@ -1,16 +1,26 @@
 #! /usr/bin/python
 
+################################################################################
+# imports
+################################################################################
 import sys
 import argparse
 import subprocess
 import os
 import glob
+import textwrap
 
+################################################################################
+# constants
+################################################################################
 LATEX            = "pdflatex"
 OUTPUT_DIRECTORY = "knuth-out"
 LATEX_OPTIONS    = ["-synctex=1", "-interaction=nonstopmode"]
 PYTHONTEX        = "pythontex"
 
+################################################################################
+# helpers
+################################################################################
 def getlines(s):
     return s.strip().split("\n")
 
@@ -33,6 +43,9 @@ def rmr_glob(g):
     if (directories != []):
         subprocess.call(["rm", "-r"] + directories)
 
+################################################################################
+# commands
+################################################################################
 def build(args):
     old_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
     
@@ -66,7 +79,41 @@ def sanitize(args):
     
     map(rm_glob,  garbage_files)
     map(rmr_glob, garbage_directories)
+ 
+def makefile(args):
+    basename = os.path.basename(args.file).split(".")[0]
+    ipython  = "--ipython" if args.ipython else ""
 
+    s = """
+    TEXFILE = {}
+
+    $(TEXFILE).pdf: $(TEXFILE).tex
+    \tknuth build {} $<
+
+    .PHONY: clean
+    clean:
+    \tknuth clean
+
+    .PHONY: tidy
+    tidy:
+    \tknuth clean --keep-pdf
+
+    .PHONY: sanitize
+    sanitize:
+    \tknuth sanitize
+
+    view: $(TEXFILE).pdf
+    \tif command -v evince; then evince $<; \\
+    \telif command -v open; then open $<; \\
+    \telse echo "ERROR: unable to open pdf. Try installing evince"; fi
+    """.format(basename, ipython)
+
+    print textwrap.dedent(s).strip()
+    
+
+################################################################################
+# parsers
+################################################################################
 def init_parser_build(subparsers):
     parser = subparsers.add_parser("build")
     parser.set_defaults(func=build)
@@ -110,6 +157,21 @@ def init_parser_sanitize(subparsers):
         help="do not remove pdf's"
     )
 
+def init_parser_makefile(subparsers):
+    parser = subparsers.add_parser("makefile")
+    parser.set_defaults(func=makefile)
+
+    parser.add_argument(\
+        'file',
+        help  = "a latex file to build"
+    )
+
+    parser.add_argument(\
+        "-i", "--ipython",
+        action="store_true",
+        help="enable ipython compilation in the Makefile"
+    )
+
 def init_parser():
     parser = argparse.ArgumentParser(\
         prog="knuth", 
@@ -120,6 +182,7 @@ def init_parser():
     init_parser_build(subparsers)
     init_parser_clean(subparsers)
     init_parser_sanitize(subparsers)
+    init_parser_makefile(subparsers)
 
     return parser
 
