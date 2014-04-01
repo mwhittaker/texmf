@@ -38,7 +38,10 @@ def build(args):
     
     err = subprocess.call(["mkdir", "-p", OUTPUT_DIRECTORY])
     if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
-    if (err == 0): err = subprocess.call([PYTHONTEX] + args.files)
+
+    if (err == 0 and args.ipython): 
+        err = subprocess.call([PYTHONTEX] + args.files)
+    
     if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
     if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
 
@@ -72,6 +75,12 @@ def init_parser_build(subparsers):
         'files',
         nargs = "+",
         help  = "latex files"
+    )
+
+    parser.add_argument(\
+        "-i", "--ipython",
+        action="store_true",
+        help="enable ipython compilation"
     )
     
     parser.add_argument(\
