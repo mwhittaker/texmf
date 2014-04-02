@@ -14,7 +14,7 @@ import textwrap
 # constants
 ################################################################################
 LATEX            = "pdflatex"
-OUTPUT_DIRECTORY = "knuth-out"
+OUTPUT_DIRECTORY = ".knuth-out"
 LATEX_OPTIONS    = ["-synctex=1", "-interaction=nonstopmode"]
 PYTHONTEX        = "pythontex"
 
