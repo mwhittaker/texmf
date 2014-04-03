@@ -50,25 +50,39 @@ class Out(object):
         messages = []
         warning  = ""
         error    = ""
+        seen_newline = False
+
+        error_colors = ["red", "yellow"]
+        error_index  = 0
 
         for line in self.output_:
             if (warning != "" and line.strip() != ""):
                 warning += "\n" + line.strip()
+                seen_newline = False
                 continue
 
             if (error != "" and line.strip() != ""):
                 error += "\n" + line.strip()
+                seen_newline = False
                 continue
             
             if (line.strip() == ""):
+                if (error != "" and not seen_newline):
+                    seen_newline = True
+                    error += "\n"
+                    continue
+
                 if (warning != ""):
-                    messages += [termcolor.colored(warning, "yellow")]
+                    messages += [termcolor.colored(warning, "blue")]
                     warning = ""
+                    seen_newline = False
                     continue
                      
                 if (error != ""):
-                    messages += [termcolor.colored(error, "red")]
+                    messages += [termcolor.colored(error, error_colors[error_index])]
+                    error_index = 1 - error_index
                     error = ""
+                    seen_newline = False
                     continue
 
             if (line.startswith("!")):
@@ -78,8 +92,8 @@ class Out(object):
             if ("Warning" in line):
                 warning = line.strip()
                 continue
-
-        return "\n".join(messages)
+    
+        return "\n".join([message.strip() for message in messages])
 
     def str(self, args):
         if (args.verbose):
