@@ -9,6 +9,7 @@ import subprocess
 import os
 import glob
 import textwrap
+import termcolor
 
 ################################################################################
 # constants
@@ -22,60 +23,150 @@ PYTHONTEX        = "pythontex"
 # helpers
 ################################################################################
 def getlines(s):
+    """Returns a list of newline delimited lines in s"""
     return s.strip().split("\n")
 
-def ls(args=None):
-    if (args is None):
-        args = []
-
-    try:
-        return getlines(subprocess.check_output(["ls"] + args))
-    except subprocess.CalledProcessError:
+def listify(x):
+    if (x is None):
         return []
 
-def rm_glob(g):
-    files = glob.glob(g)
-    if (files != []):
-        subprocess.call(["rm"] + files)
+    if (type(x) != list):
+        return [x]
 
-def rmr_glob(g):
-    directories = glob.glob(g)
-    if (directories != []):
-        subprocess.call(["rm", "-r"] + directories)
+    return x
+
+class Out(object):
+    def __init__(self, err, output):
+        assert type(err)    == int
+        assert type(output) == list
+
+        self.err_    = err
+        self.output_ = output
+
+    def __nonzero__(self):
+        return self.err_ == 0
+
+    def parse_(self):
+        messages = []
+        warning  = ""
+        error    = ""
+
+        for line in self.output_:
+            if (warning != "" and line.strip() != ""):
+                warning += "\n" + line.strip()
+                continue
+
+            if (error != "" and line.strip() != ""):
+                error += "\n" + line.strip()
+                continue
+            
+            if (line.strip() == ""):
+                if (warning != ""):
+                    messages += [termcolor.colored(warning, "yellow")]
+                    warning = ""
+                    continue
+                     
+                if (error != ""):
+                    messages += [termcolor.colored(error, "red")]
+                    error = ""
+                    continue
+
+            if (line.startswith("!")):
+                error = line.strip()
+                continue
+            
+            if ("Warning" in line):
+                warning = line.strip()
+                continue
+
+        return "\n".join(messages)
+
+    def str(self, args):
+        if (args.verbose):
+            output = "\n".join(self.output_)
+            if (self.__nonzero__()):
+                return output
+            else:
+                return termcolor.colored(output, "red")
+        
+        return self.parse_()
+
+    def __str__(self):
+        return "\n".join(self.output_)
+
+    def __call__(self):
+        return self.output_
+
+def bind(clargs, out, f, *args, **kwargs):
+    if (out):
+        out = f(*args, **kwargs)
+
+        message = out.str(clargs)
+        if (message.strip() != ""):
+            print message
+
+        return out
+    return out
+
+def cmd(commands):
+    def cmd_(args=None):
+        comms = listify(commands)
+        args  = listify(args) 
+        
+        try:
+            output = getlines(subprocess.check_output(comms + args))
+            return Out(0, output)
+        except subprocess.CalledProcessError as e:
+            return Out(e.returncode, getlines(e.output))
+
+    return cmd_
+
+def fglob(f, g):
+    globs = glob.glob(g)
+    if (globs != []):
+        f(globs)
+
+ls        = cmd("ls")
+rm        = cmd("rm")
+rmr       = cmd(["rm", "-r"])
+mv        = cmd("mv")
+mkdir     = cmd("mkdir")
+latex     = cmd([LATEX] + LATEX_OPTIONS)
+pythontex = cmd(PYTHONTEX)
+
+def exit_on_error(out):
+    if (not out):
+        sys.exit(out.err_)
 
 ################################################################################
 # commands
 ################################################################################
 def build(args):
-    old_files = ls()
-    old_files = filter(lambda s: not s.endswith("pdf"), old_files)
-    old_files = filter(lambda s: s != OUTPUT_DIRECTORY, old_files)
-    old_files = set(old_files)
+    old_files = set(ls()())
     
-    err = subprocess.call(["mkdir", "-p", OUTPUT_DIRECTORY])
-    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
-
-    if (err == 0 and args.ipython): 
-        err = subprocess.call([PYTHONTEX] + args.files)
+    out = mkdir(["-p", OUTPUT_DIRECTORY])
+    out = bind(args, out, latex, args.files)
     
-    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
-    if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
+    if (args.ipython): 
+        out = bind(args, out, pythontex, args.files)
 
-    new_files = ls()
-    new_files = filter(lambda s: not s.endswith("pdf"), new_files)
-    new_files = filter(lambda s: s != OUTPUT_DIRECTORY, new_files)
-    new_files = set(new_files)
+    out = bind(args, out, latex, args.files)
+    out = bind(args, out, latex, args.files)
 
+    new_files = set(ls()())
     tmp_files = new_files - old_files
     for tmp_file in tmp_files:
-        subprocess.call(["mv", "-f", tmp_file, OUTPUT_DIRECTORY])
+        if (not tmp_file.endswith("pdf") and tmp_file != OUTPUT_DIRECTORY):
+            mv(["-f", tmp_file, OUTPUT_DIRECTORY])
+    
+    exit_on_error(out)
 
 def clean(args):
     if (os.path.exists(OUTPUT_DIRECTORY)):
-        subprocess.call(["rm", "-r", OUTPUT_DIRECTORY])
+        rmr(OUTPUT_DIRECTORY)
 
     if (args.keep_pdf == False):
-        rm_glob("*.pdf")
+        fglob(rm, "*.pdf")
 
 def sanitize(args):
     garbage_files = ["*.aux", "*.log", "*.out", "*.gz", "*.pytxcode"]
@@ -84,8 +175,8 @@ def sanitize(args):
 
     garbage_directories = [OUTPUT_DIRECTORY, "pythontex-files-*"]
     
-    map(rm_glob,  garbage_files)
-    map(rmr_glob, garbage_directories)
+    map(lambda s: fglob(rm, s),  garbage_files)
+    map(lambda s: fglob(rmr, s), garbage_directories)
  
 def makefile(args):
     basename = os.path.basename(args.file).split(".")[0]
@@ -138,10 +229,9 @@ def init_parser_build(subparsers):
     )
     
     parser.add_argument(\
-        "-v", "--verbosity", 
-        action  = "count", 
-        default = 0,
-        help    = "increase output verbosity"
+        "-v", "--verbose", 
+        action  = "store_true", 
+        help    = "enable verbosity"
     )
 
 def init_parser_clean(subparsers):
