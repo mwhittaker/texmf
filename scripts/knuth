@@ -47,7 +47,10 @@ def rmr_glob(g):
 # commands
 ################################################################################
 def build(args):
-    old_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
+    old_files = ls()
+    old_files = filter(lambda s: not s.endswith("pdf"), old_files)
+    old_files = filter(lambda s: s != OUTPUT_DIRECTORY, old_files)
+    old_files = set(old_files)
     
     err = subprocess.call(["mkdir", "-p", OUTPUT_DIRECTORY])
     if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
@@ -58,7 +61,11 @@ def build(args):
     if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
     if (err == 0): err = subprocess.call([LATEX] + LATEX_OPTIONS + args.files)
 
-    new_files = set(ls(["--ignore=*.pdf", "--ignore=%s" % (OUTPUT_DIRECTORY)]))
+    new_files = ls()
+    new_files = filter(lambda s: not s.endswith("pdf"), new_files)
+    new_files = filter(lambda s: s != OUTPUT_DIRECTORY, new_files)
+    new_files = set(new_files)
+
     tmp_files = new_files - old_files
     for tmp_file in tmp_files:
         subprocess.call(["mv", "-f", tmp_file, OUTPUT_DIRECTORY])
