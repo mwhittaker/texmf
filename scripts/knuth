@@ -10,6 +10,7 @@ import os
 import glob
 import textwrap
 import termcolor
+import itertools
 
 ################################################################################
 # constants
@@ -36,6 +37,11 @@ def listify(x):
     return x
 
 class Out(object):
+    WARNING_COLOR = "yellow"
+    ERROR_COLOR   = "red"
+    ATTRS         = [{"attrs": []}, {"attrs": ["bold"]}]
+    ATTRS_INDEX   = 0
+
     def __init__(self, err, output):
         assert type(err)    == int
         assert type(output) == list
@@ -51,9 +57,6 @@ class Out(object):
         warning  = ""
         error    = ""
         seen_newline = False
-
-        error_colors = ["red", "yellow"]
-        error_index  = 0
 
         for line in self.output_:
             if (warning != "" and line.strip() != ""):
@@ -73,14 +76,17 @@ class Out(object):
                     continue
 
                 if (warning != ""):
-                    messages += [termcolor.colored(warning, "blue")]
+                    message = termcolor.colored(warning, Out.WARNING_COLOR, **Out.ATTRS[Out.ATTRS_INDEX])
+                    messages += [message]
+                    Out.ATTRS_INDEX = 1 - Out.ATTRS_INDEX
                     warning = ""
                     seen_newline = False
                     continue
                      
                 if (error != ""):
-                    messages += [termcolor.colored(error, error_colors[error_index])]
-                    error_index = 1 - error_index
+                    message = termcolor.colored(error, Out.ERROR_COLOR, **Out.ATTRS[Out.ATTRS_INDEX])
+                    messages += [message]
+                    Out.ATTRS_INDEX = 1 - Out.ATTRS_INDEX
                     error = ""
                     seen_newline = False
                     continue
