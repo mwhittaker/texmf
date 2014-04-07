@@ -162,7 +162,7 @@ def exit_on_error(out):
 # commands
 ################################################################################
 def build(args):
-    rmr(OUTPUT_DIRECTORY)
+    rmr(["-f", OUTPUT_DIRECTORY])
     old_files = set(ls()())
     
     out = mkdir(["-p", OUTPUT_DIRECTORY])
