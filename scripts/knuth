@@ -190,7 +190,8 @@ def clean(args):
         fglob(rm, "*.pdf")
 
 def sanitize(args):
-    garbage_files = ["*.aux", "*.log", "*.out", "*.gz", "*.pytxcode"]
+    garbage_files = ["*.aux", "*.log", "*.out", "*.gz", "*.lol", "*.toc",
+                     "*.pytxcode"]
     if (args.keep_pdf == False):
         garbage_files += ["*.pdf"]
 
