@@ -1,0 +1,58 @@
+\ProvidesPackage{matlab}
+
+\input{requires.tex}
+\input{colors.tex}
+\input{lengths.tex}
+\input{captions.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Captions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareCaptionFormat{listing}{\colorbox[HTML]{3675a9}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{#1#2#3}}}
+\captionsetup[MATLAB]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,small}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language Definition
+\lstdefinelanguage{Matlab}{%
+  % Basic settings
+  basicstyle=\smaller\ttfamily,
+  tabsize=4,
+  showstringspaces=false,
+  mathescape=true,
+  breaklines=true,
+  numbers=left,
+  % Keywords, strings, and comments
+  keywords={%
+    break, case, catch, classdef, continue, else, elseif, end, for, function,
+    global, if, otherwise, parfor, persistent, return, spmd, switch, try, while
+  },
+  keywords=[2]{%
+  },
+  morestring=[b]',
+  morecomment=[l]{\%},
+  % Colors and style
+  keywordstyle=\color{blue},
+  keywordstyle=[2]\color{DarkOrchid},
+  commentstyle=\color{ForestGreen},
+  stringstyle=\color{Red},
+  numberstyle=\color{SolarizedGrey}
+}
+
+% environment
+\lstnewenvironment{Matlab}[1][]{%
+  \lstset{language=Matlab, linewidth=80\charwidth, #1}
+  \captionsetup{options=MATLAB}
+}{}
+
+
+% inline definition.
+\newcommand*{\matlab}{\lstinline[{language=Matlab}]}
+
+% input listing definition
+\newcommand{\inputmatlab}[2][ ]{{%
+  \captionsetup{options=MATLAB}
+  \lstset{linewidth=80\charwidth}
+  \lstinputlisting[language=Matlab,#1]{#2} 
+}}
