@@ -70,18 +70,22 @@ class after(object):
 ################################################################################
 # backslash commands
 ################################################################################
-def backslash(tag, opts=""):
-    def f(s):
+def backslash(tag):
+    def f(s, opts=""):
         print "\\%s%s{%s}" % (tag, opts, s)
     return f
 
-section       = backslash("section")
-subsection    = backslash("subsection")
-subsubsection = backslash("subsubsection")
-paragraph     = backslash("paragraph")
-subparagraph  = backslash("subparagraph")
-textbf        = backslash("textbf")
-textit        = backslash("textit")
+section         = backslash("section")
+subsection      = backslash("subsection")
+subsubsection   = backslash("subsubsection")
+paragraph       = backslash("paragraph")
+subparagraph    = backslash("subparagraph")
+textbf          = backslash("textbf")
+textit          = backslash("textit")
+centering       = backslash("centering")
+caption         = backslash("caption")
+label           = backslash("label")
+includegraphics = backslash("includegraphics")
 
 ################################################################################
 # matrices
