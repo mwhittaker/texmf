@@ -67,7 +67,9 @@
 
 % input listing definition
 \newcommand{\inputcpp}[2][ ]{%
+  {%
   \captionsetup{options=CPP}
   \lstset{linewidth=80\charwidth}
   \lstinputlisting[language=cpp,#1]{#2} 
+  }
 }

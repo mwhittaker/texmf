@@ -52,7 +52,9 @@
 
 % input listing definition
 \newcommand{\inputmatlab}[2][ ]{{%
+  {%
   \captionsetup{options=MATLAB}
   \lstset{linewidth=80\charwidth}
   \lstinputlisting[language=Matlab,#1]{#2} 
+  }
 }}

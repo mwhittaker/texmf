@@ -61,7 +61,9 @@
 
 % input listing definition
 \newcommand{\inputc}[2][ ]{{%
+  {%
   \captionsetup{options=C}
   \lstset{linewidth=80\charwidth}
   \lstinputlisting[language=CC,#1]{#2} 
+  }%
 }}

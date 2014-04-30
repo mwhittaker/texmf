@@ -63,7 +63,9 @@
 
 % input listing definition
 \newcommand{\inputphp}[2][ ]{%
+  {%
   \captionsetup{options=PHPCAPTION}
   \lstset{linewidth=80\charwidth}
   \lstinputlisting[language=PHP,#1]{#2} 
+  }
 }
