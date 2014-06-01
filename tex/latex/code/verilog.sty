@@ -1,0 +1,79 @@
+\ProvidesPackage{verilog}
+
+\input{requires.tex}
+\input{colors.tex}
+\input{captions.tex}
+\input{lengths.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Captions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareCaptionFormat{veriloglisting}{\colorbox[HTML]{dab359}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{#1#2#3}}}
+\captionsetup[VERILOG]{format=veriloglisting,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,small}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language Definition
+\lstdefinelanguage{verilog}{%
+  % Basic settings
+  basicstyle=\smaller\ttfamily,
+  tabsize=4,
+  %frame=single,
+  showstringspaces=false,
+  mathescape=true,
+  breaklines=true,
+  numbers=left,
+  % Keywords, strings, and comments
+  keywords={%
+    always, and, assign, automatic, begin, buf, bufif0, bufif1, case, casex,
+    casez, cell, cmos, config, deassign, default, defparam, design, disable,
+    edge, else, end, endcase, endconfig, endfunction, endgenerate, endmodule,
+    endprimitive, endspecify, endtable, endtask, event, for, force, forever,
+    fork, function, generate, genvar, highz0, highz1, if, ifnone, incdir,
+    include, initial, inout, input, instance, integer, join, large, liblist,
+    library, localparam, macromodule, medium, module, nand, negedge, nmos, nor,
+    noshowcancelledno, not, notif0, notif1, or, output, parameter, pmos,
+    posedge, primitive, pull0, pull1, pulldown, pullup,
+    pulsestyle_oneventglitch, pulsestyle_ondetectglitch, remos, real, realtime,
+    reg, release, repeat, rnmos, rpmos, rtran, rtranif0, rtranif1, scalared,
+    showcancelled, signed, small, specify, specparam, strong0, strong1,
+    supply0, supply1, table, task, time, tran, tranif0, tranif1, tri, tri0,
+    tri1, triand, trior, trireg, unsigned, use, vectored, wait, wand, weak0,
+    weak1, while, wire, wor, xnor, xor
+  },
+  keywords=[2]{%
+  },
+  morestring=[b]",
+  morestring=[b]',
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morecomment=[l][\color{gray}]{`},
+  % Colors and style
+  %backgroundcolor=\color{BackgroundYellow},
+  keywordstyle=\color{blue},
+  keywordstyle=[2]\color{DarkOrchid},
+  commentstyle=\color{ForestGreen},
+  stringstyle=\color{Red},
+  numberstyle=\color{SolarizedGrey}
+}
+
+% environment
+\lstnewenvironment{Verilog}[1][]{%
+  \lstset{language=verilog, linewidth=80\charwidth, #1}
+  \captionsetup{options=VERILOG}
+}{}
+
+
+% inline definition.
+\newcommand*{\verilog}{\lstinline[{language=verilog}]}
+
+% input listing definition
+\newcommand{\inputverilog}[2][ ]{%
+  {%
+  \captionsetup{options=VERILOG}
+  \lstset{linewidth=80\charwidth}
+  \lstinputlisting[language=verilog,#1]{#2} 
+  }
+}
