@@ -15,7 +15,7 @@
 \RequirePackage{graphicx}                         
 \RequirePackage[letterpaper,margin=1in]{geometry}
 \RequirePackage{enumerate}                        
-\RequirePackage{hyperref}              
+\RequirePackage[hidelinks]{hyperref}              
 \RequirePackage{float}                           
 \RequirePackage{lastpage}                         
 
