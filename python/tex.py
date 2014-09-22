@@ -88,6 +88,16 @@ label           = backslash("label")
 includegraphics = backslash("includegraphics")
 
 ################################################################################
+# tables from lists
+################################################################################
+def table(l):
+    l = [[str(x) for x in row] for row in l]
+    m = "\\\\\\hline\n".join([" & ".join(row) for row in l])
+    return r"\begin{tabular}{" + "|".join(['c'] * len(l[0])) + "}\n" + \
+           m + \
+           "\n" + r"\end{tabular}"
+
+################################################################################
 # matrices
 ################################################################################
 def matrix(a, m="p"):
