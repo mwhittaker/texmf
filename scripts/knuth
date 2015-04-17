@@ -15,7 +15,7 @@ import itertools
 ################################################################################
 # constants
 ################################################################################
-LATEX            = "pdflatex"
+LATEX            = "lualatex"
 OUTPUT_DIRECTORY = ".knuth-out"
 LATEX_OPTIONS    = ["-synctex=1", "-interaction=nonstopmode"]
 PYTHONTEX        = "pythontex"
