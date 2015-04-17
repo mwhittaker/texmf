@@ -1,9 +1,10 @@
 \documentclass{hw}
 \usepackage{code}
+\usepackage{pythontex}
 
 \title{Example \LaTeX{} Document} % defaults to empty string
 \author{John Doe}                 % defaults to Michael Whittaker
-\date{\today}                     % defaults to \today 
+\date{\today}                     % defaults to \today
 
 \begin{document}
 \maketitle
@@ -15,10 +16,10 @@
 
 
 \section{Code}
-Refer to \listref{eqn-solver}, \listref{herb-sutter}, and
-\listref{fast-inv-sqrt} for block code in various languages. Once \python{in} a
-while, it is also nice to \c{struct}ure your text to have inline code in a wide
-\cpp{class} of languages.
+Refer to \listref{eqn-solver}, \listref{herb-sutter}, \listref{fast-inv-sqrt},
+and \listref{tuples} for block code in various languages. Once \python{in} a
+while, it is also nice to \java{try} and \c{struct}ure your text to have inline
+code in a wide \cpp{class} of languages.
 
 \begin{Python}[%
   label=list:eqn-solver,
@@ -45,11 +46,11 @@ shared_ptr<widget> get_widget(int id) {
 \end{CPP}
 
 \begin{C}[%
-  label=list:fast-inv-sqrt, 
-  caption=Fast inverse squareroot 
+  label=list:fast-inv-sqrt,
+  caption=Fast inverse squareroot
 ]
 float Q_rsqrt( float number ) {
-    long i; 
+    long i;
     float x2, y;
     const float threehalfs = 1.5F;
     x2 = number * 0.5F;
@@ -59,12 +60,27 @@ float Q_rsqrt( float number ) {
     y  = * ( float * ) &i;
     y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
 //  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
- 
+
     return y;
-}  
+}
 \end{C}
 
-\section{ipython}
+\begin{Java}[%
+    label=list:tuples,
+    caption=Generic Two Tuples
+]
+public class Tuple2<A, B> {
+    public A a;
+    public B a;
+
+    public class Tuple2(A a, B b) {
+        this.a = a;
+        this.b = b;
+    }
+}
+\end{Java}
+
+\section{PythonTex}
 \begin{pycode}
 import tex
 import numpy as np
