@@ -68,7 +68,7 @@ class Out(object):
                 error += "\n" + line.strip()
                 seen_newline = False
                 continue
-            
+
             if (line.strip() == ""):
                 if (error != "" and not seen_newline):
                     seen_newline = True
@@ -82,7 +82,7 @@ class Out(object):
                     warning = ""
                     seen_newline = False
                     continue
-                     
+
                 if (error != ""):
                     message = termcolor.colored(error, Out.ERROR_COLOR, **Out.ATTRS[Out.ATTRS_INDEX])
                     messages += [message]
@@ -94,11 +94,11 @@ class Out(object):
             if (line.startswith("!")):
                 error = line.strip()
                 continue
-            
+
             if ("Warning" in line):
                 warning = line.strip()
                 continue
-    
+
         return "\n".join([message.strip() for message in messages])
 
     def str(self, args):
@@ -108,7 +108,7 @@ class Out(object):
                 return output
             else:
                 return termcolor.colored(output, "red")
-        
+
         return self.parse_()
 
     def __str__(self):
@@ -131,8 +131,8 @@ def bind(clargs, out, f, *args, **kwargs):
 def cmd(commands):
     def cmd_(args=None):
         comms = listify(commands)
-        args  = listify(args) 
-        
+        args  = listify(args)
+
         try:
             output = getlines(subprocess.check_output(comms + args))
             return Out(0, output)
@@ -164,11 +164,11 @@ def exit_on_error(out):
 def build(args):
     rmr(["-f", OUTPUT_DIRECTORY])
     old_files = set(ls()())
-    
+
     out = mkdir(["-p", OUTPUT_DIRECTORY])
     out = bind(args, out, latex, args.files)
-    
-    if (args.ipython): 
+
+    if (args.ipython):
         out = bind(args, out, pythontex, args.files)
 
     out = bind(args, out, latex, args.files)
@@ -179,7 +179,7 @@ def build(args):
     for tmp_file in tmp_files:
         if (not tmp_file.endswith("pdf") and tmp_file != OUTPUT_DIRECTORY):
             mv(["-f", tmp_file, OUTPUT_DIRECTORY])
-    
+
     exit_on_error(out)
 
 def clean(args):
@@ -196,10 +196,10 @@ def sanitize(args):
         garbage_files += ["*.pdf"]
 
     garbage_directories = [OUTPUT_DIRECTORY, "pythontex-files-*"]
-    
+
     map(lambda s: fglob(rm, s),  garbage_files)
     map(lambda s: fglob(rmr, s), garbage_directories)
- 
+
 def makefile(args):
     basename = os.path.basename(args.file).split(".")[0]
     ipython  = "--ipython" if args.ipython else ""
@@ -229,7 +229,7 @@ def makefile(args):
     """.format(basename, ipython)
 
     print textwrap.dedent(s).strip()
-    
+
 
 ################################################################################
 # parsers
@@ -237,7 +237,7 @@ def makefile(args):
 def init_parser_build(subparsers):
     parser = subparsers.add_parser("build")
     parser.set_defaults(func=build)
-    
+
     parser.add_argument(\
         'files',
         nargs = "+",
@@ -249,10 +249,10 @@ def init_parser_build(subparsers):
         action="store_true",
         help="enable ipython compilation"
     )
-    
+
     parser.add_argument(\
-        "-v", "--verbose", 
-        action  = "store_true", 
+        "-v", "--verbose",
+        action  = "store_true",
         help    = "enable verbosity"
     )
 
@@ -293,7 +293,7 @@ def init_parser_makefile(subparsers):
 
 def init_parser():
     parser = argparse.ArgumentParser(\
-        prog="knuth", 
+        prog="knuth",
         description="A latex compiler orchestrator"
     )
 
