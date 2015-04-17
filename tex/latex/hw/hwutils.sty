@@ -1,4 +1,4 @@
-%% Filename      : hwutils.sty 
+%% Filename      : hwutils.sty
 %% Author(s)     : Michael Whittaker (mjw297@cornell.edu)
 %% Last Modified : 2013-11-09
 \ProvidesPackage{hwutils}
@@ -21,17 +21,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CS 2800
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Set (content) 
+% Set (content)
 % Creates set in the form {content}.
 \newcommand{\set}[1]{\left\{{#1}\right\}}
 
-% Set (content) 
+% Set (content)
 % Creates set in the form (content).
 \newcommand{\group}[1]{\left({#1}\right)}
-        
+
 % Set Such That (content, condition)
 % Creates set in the form {content | condition}.
-\newcommand{\setst}[2]{\set{{#1} \mid {#2}}} 
+\newcommand{\setst}[2]{\set{{#1} \mid {#2}}}
 
 % Probability (content)
 % Creates probability in the format Pr[content]
@@ -60,12 +60,18 @@
 
 % Proof titles
 \newtheorem{lemma}{Lemma}
+\newtheorem*{lemma*}{Lemma}
 \newtheorem{claim}{Claim}
+\newtheorem*{claim*}{Claim}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem*{definition*}{Definition}
 % Replaces the tombstones at the end of proofs with black squares
 \renewcommand{\qedsymbol}{$\blacksquare$}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Links 
+% Links
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand\link[2]{\href{#1}{{\color{blue}\underline{\smash{#2}}}}}
 
